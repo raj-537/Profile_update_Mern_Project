@@ -18,7 +18,7 @@ export async function getUsername(){
 /** authenticate function */
 export async function authenticate(username){
     try {
-        return await axios.post('http://localhost:8080/api/authenticate', { username })
+        return await axios.post('https://m-2-qhve.onrender.com/api/authenticate', { username })
     } catch (error) {
         return { error : "Username doesn't exist...!"}
     }
@@ -27,7 +27,7 @@ export async function authenticate(username){
 /** get User details */
 export async function getUser({ username }){
     try {
-        const { data } = await axios.get(`http://localhost:8080/api/user/${username}`);
+        const { data } = await axios.get(`https://m-2-qhve.onrender.com/api/user/${username}`);
         return { data };
     } catch (error) {
         return { error : "Password doesn't Match...!"}
@@ -37,8 +37,8 @@ export async function getUser({ username }){
 /** register user function */
 export async function registerUser(credentials){
     try {  console.log(credentials)
-        // const { data : { msg }, status } = await axios.post(`http://localhost:8080/api/register`, credentials);
-        const response = await fetch('http://localhost:8080/api/register', {
+        // const { data : { msg }, status } = await axios.post(`https://m-2-qhve.onrender.com/api/register`, credentials);
+        const response = await fetch('https://m-2-qhve.onrender.com/api/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export async function registerUser(credentials){
             const errorData = await response.json();
             throw new Error(`Error: ${status}, Message: ${errorData.msg}`);
           }
-        // const a=await axios.post(`http://localhost:8080/api/register`, credentials);
+        // const a=await axios.post(`https://m-2-qhve.onrender.com/api/register`, credentials);
 
       
         
@@ -64,7 +64,7 @@ export async function registerUser(credentials){
         /** send email */
         if(status === 201){
             console.log("babu")
-            await axios.post('http://localhost:8080/api/registerMail', { username, userEmail : email, text : msg})
+            await axios.post('https://m-2-qhve.onrender.com/api/registerMail', { username, userEmail : email, text : msg})
         }
 
         return Promise.resolve(msg)
@@ -85,7 +85,7 @@ export async function registerUser(credentials){
 export async function verifyPassword({ username, password }){
     try {
         if(username){
-            const { data } = await axios.post('http://localhost:8080/api/login', { username, password })
+            const { data } = await axios.post('https://m-2-qhve.onrender.com/api/login', { username, password })
             return Promise.resolve({ data });
         }
     } catch (error) {
@@ -98,7 +98,7 @@ export async function updateUser(response){
     try {
         
         const token = await localStorage.getItem('token');
-        const data = await axios.put('http://localhost:8080/api/updateuser', response, { headers : { "Authorization" : `Bearer ${token}`}});
+        const data = await axios.put('https://m-2-qhve.onrender.com/api/updateuser', response, { headers : { "Authorization" : `Bearer ${token}`}});
 
         return Promise.resolve({ data })
     } catch (error) {
@@ -109,13 +109,13 @@ export async function updateUser(response){
 /** generate OTP */
 export async function generateOTP(username){
     try {
-        const {data : { code }, status } = await axios.get('http://localhost:8080/api/generateOTP', { params : { username }});
+        const {data : { code }, status } = await axios.get('https://m-2-qhve.onrender.com/api/generateOTP', { params : { username }});
 
         // send mail with the OTP
         if(status === 201){
             let { data : { email }} = await getUser({ username });
             let text = `Your Password Recovery OTP is ${code}. Verify and recover your password.`;
-            await axios.post('http://localhost:8080/api/registerMail', { username, userEmail: email, text, subject : "Password Recovery OTP"})
+            await axios.post('https://m-2-qhve.onrender.com/api/registerMail', { username, userEmail: email, text, subject : "Password Recovery OTP"})
         }
         return Promise.resolve(code);
     } catch (error) {
@@ -126,7 +126,7 @@ export async function generateOTP(username){
 /** verify OTP */
 export async function verifyOTP({ username, code }){
     try {
-       const { data, status } = await axios.get('http://localhost:8080/api/verifyOTP', { params : { username, code }})
+       const { data, status } = await axios.get('https://m-2-qhve.onrender.com/api/verifyOTP', { params : { username, code }})
        return { data, status }
     } catch (error) {
         return Promise.reject(error);
@@ -136,7 +136,7 @@ export async function verifyOTP({ username, code }){
 /** reset password */
 export async function resetPassword({ username, password }){
     try {
-        const { data, status } = await axios.put('http://localhost:8080/api/resetPassword', { username, password });
+        const { data, status } = await axios.put('https://m-2-qhve.onrender.com/api/resetPassword', { username, password });
         return Promise.resolve({ data, status})
     } catch (error) {
         return Promise.reject({ error })
